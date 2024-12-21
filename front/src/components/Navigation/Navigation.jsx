@@ -2,6 +2,8 @@ import React from "react";
 import { AccountIcon } from "../common/AccountIcon";
 import { CartIcon } from "../common/CartIcon";
 import Wishlist from "../common/Wishlist";
+import { Link, NavLink } from "react-router-dom";
+import "./Navigation.css";
 
 const Navigation = () => {
   return (
@@ -17,16 +19,36 @@ const Navigation = () => {
         {/* Nav items */}{" "}
         <ul className="flex gap-14 text-gray-600 hover:text-black">
           <li>
-            <a href="\">shop</a>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? "active-link" : "")}
+            >
+              Shop
+            </NavLink>
           </li>
           <li>
-            <a href="\">men</a>
+            <NavLink
+              to="/men"
+              className={({ isActive }) => (isActive ? "active-link" : "")}
+            >
+              Men
+            </NavLink>
           </li>
           <li>
-            <a href="\">women</a>
+            <NavLink
+              to="/women"
+              className={({ isActive }) => (isActive ? "active-link" : "")}
+            >
+              Women
+            </NavLink>
           </li>
           <li>
-            <a href="\">kids</a>
+            <NavLink
+              to="/kids"
+              className={({ isActive }) => (isActive ? "active-link" : "")}
+            >
+              Kids
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -63,7 +85,7 @@ const Navigation = () => {
           </li>
           <li>
             <button>
-              <AccountIcon />
+              <Link AccountIcon />
             </button>
           </li>
           <li>
