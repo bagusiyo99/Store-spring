@@ -1,0 +1,14 @@
+{
+  "categories": [
+    {
+      "title": "Categories For Women",
+      "data": [
+        {
+          "title": "Hoodies & Sweetshirt",
+          "description": "Explore Now!",
+          "image": "./images/category-women-hoodies.jpg"
+        }
+      ]
+    }
+  ]
+}
