@@ -85,7 +85,7 @@ const Navigation = () => {
           </li>
           <li>
             <button>
-              <Link AccountIcon />
+              <AccountIcon />
             </button>
           </li>
           <li>
