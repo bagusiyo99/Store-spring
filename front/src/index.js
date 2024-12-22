@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-// import Shop from "./Shop";
+import Shop from "./Shop";
 import reportWebVitals from "./reportWebVitals";
 import "react-multi-carousel/lib/styles.css";
 import { RouterProvider } from "react-router-dom";
@@ -14,7 +14,7 @@ root.render(
     <RouterProvider router={router}>
       <Navigation />
 
-      {/* <Shop /> */}
+      <Shop />
     </RouterProvider>
   </React.StrictMode>
 );
