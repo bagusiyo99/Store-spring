@@ -4,7 +4,7 @@ import Breadcrumb from "./../../Breadcrumb/Breadcrumb";
 import content from "../../../data/content.json";
 import Rating from "./../../Rating/Rating";
 import SizeFilter from "./../../Filters/SizeFilter";
-// import ProductColors from "./ProductColors";
+import ProductColors from "./ProductColors";
 
 const categories = content?.categories;
 
@@ -113,10 +113,11 @@ const ProductDetails = () => {
           <div className="mt-2">
             <SizeFilter sizes={product?.size} hidleTitle />
           </div>
-          {/* <div>
+          <div>
             <p className="text-lg bold">Colors Available</p>
-            <ProductColors colors={product?.colors} />
-          </div> */}
+
+            <ProductColors colors={product?.color} />
+          </div>
           <div className="flex py-4">
             <button className="bg-black rounded-lg hover:bg-gray-700">
               <div className="flex h-[42px] rounded-lg w-[150px] px-2 items-center justify-center bg-black text-white hover:bg-gray-700">
