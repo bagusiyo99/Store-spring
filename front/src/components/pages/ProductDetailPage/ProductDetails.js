@@ -198,7 +198,7 @@ const ProductDetails = () => {
           {similarProducts?.map((item, index) => (
             <ProductCard key={index} {...item} />
           ))}
-          {!similarProducts?.length && <p>No Products Found!</p>}
+          {!similarProducts?.length && <p>No Products ditemukan!</p>}
         </div>
       </div>
     </>
