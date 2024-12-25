@@ -7,15 +7,19 @@ import "react-multi-carousel/lib/styles.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import Navigation from "./components/Navigation/Navigation";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <Navigation />
+    <Provider store={store}>
+      <RouterProvider router={router}>
+        <Navigation />
 
-      <Shop />
-    </RouterProvider>
+        <Shop />
+      </RouterProvider>
+    </Provider>
   </React.StrictMode>
 );
 
