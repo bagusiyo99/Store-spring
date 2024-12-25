@@ -26,22 +26,31 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> productList = productService.getAllProducts();
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+//    @GetMapping
+//    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam
+//    (required = false) UUID categoryId,
+//    @RequestParam(required = false) UUID typeId) {
+//        List<ProductDto> productList = productService.getAllProducts(categoryId,typeId);
+//        return new ResponseEntity<>(productList, HttpStatus.OK);
+//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable UUID id){
+        ProductDto productDto = productService.getProductById(id);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
-
-
 
     //   create Product
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto){
         Product product = productService.addProduct(productDto);
-
-//        return new ResponseEntity<>(product,HttpStatus.CREATED);
-        return null;
+        return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@RequestBody ProductDto productDto,@PathVariable UUID id){
+        Product product = productService.updateProduct(productDto,id);
+        return new ResponseEntity<>(product,HttpStatus.OK);
+    }
 
 }
