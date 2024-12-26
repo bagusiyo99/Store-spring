@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 @Service
 public class CategoryService {
 
@@ -46,11 +45,6 @@ public class CategoryService {
         return  category;
     }
 
-    public List<Category> getAllCategory() {
-
-        return categoryRepository.findAll();
-    }
-
     private List<CategoryType> mapToCategoryTypesList(List<CategoryTypeDto> categoryTypeList, Category category) {
         return categoryTypeList.stream().map(categoryTypeDto -> {
             CategoryType categoryType = new CategoryType();
@@ -60,6 +54,11 @@ public class CategoryService {
             categoryType.setCategory(category);
             return categoryType;
         }).collect(Collectors.toList());
+    }
+
+
+    public List<Category> getAllCategory() {
+        return categoryRepository.findAll();
     }
 
     public Category updateCategory(CategoryDto categoryDto, UUID categoryId) {
@@ -107,5 +106,4 @@ public class CategoryService {
     public void deleteCategory(UUID categoryId) {
         categoryRepository.deleteById(categoryId);
     }
-
 }

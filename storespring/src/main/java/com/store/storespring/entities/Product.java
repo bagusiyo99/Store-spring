@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-
 @Entity
 @Table(name = "products")
 @Data
@@ -18,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Product {
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -40,6 +40,8 @@ public class Product {
     @Column(nullable = false)
     private boolean isNewArrival;
 
+    @Column(nullable = false,unique = true)
+    private String slug;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -75,5 +77,4 @@ public class Product {
     protected void onUpdate() {
         updatedAt = new java.util.Date();
     }
-
 }

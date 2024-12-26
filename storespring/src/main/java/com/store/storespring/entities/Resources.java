@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "product_resources")
 @Data

@@ -1,19 +1,19 @@
 package com.store.storespring.services;
 
 import com.store.storespring.dto.ProductDto;
-import com.store.storespring.dto.ProductResourceDto;
-import com.store.storespring.dto.ProductVariantDto;
 import com.store.storespring.entities.*;
-//import com.store.storespring.mapper.ProductMapper;
+import com.store.storespring.exceptions.ResourceNotFoundEx;
+import com.store.storespring.mapper.ProductMapper;
 import com.store.storespring.repositories.ProductRepository;
 import com.store.storespring.specification.ProductSpecification;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -25,93 +25,67 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private CategoryService categoryService;
 
-//    @Autowired
-//    private ProductMapper productMapper;
+    @Autowired
+    private ProductMapper productMapper;
 
     @Override
-    public Product addProduct(ProductDto product) {
-        return null;
+    public Product addProduct(ProductDto productDto) {
+        Product product = productMapper.mapToProductEntity(productDto);
+        return productRepository.save(product);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products;
+    public List<ProductDto> getAllProducts(UUID categoryId, UUID typeId) {
+
+        Specification<Product> productSpecification= Specification.where(null);
+
+        if(null != categoryId){
+            productSpecification = productSpecification.and(ProductSpecification.hasCategoryId(categoryId));
+        }
+        if(null != typeId){
+            productSpecification = productSpecification.and(ProductSpecification.hasCategoryTypeId(typeId));
+        }
+
+        List<Product> products = productRepository.findAll(productSpecification);
+        return productMapper.getProductDtos(products);
     }
-
-
 
     @Override
     public ProductDto getProductBySlug(String slug) {
-        return null;
+        Product product= productRepository.findBySlug(slug);
+        if(null == product){
+            throw new ResourceNotFoundEx("Product Not Found!");
+        }
+        ProductDto productDto = productMapper.mapProductToDto(product);
+        productDto.setCategoryId(product.getCategory().getId());
+        productDto.setCategoryTypeId(product.getCategoryType().getId());
+        productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
+        productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
+        return productDto;
     }
 
     @Override
     public ProductDto getProductById(UUID id) {
-        return null;
+        Product product= productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEx("Product Not Found!"));
+        ProductDto productDto = productMapper.mapProductToDto(product);
+        productDto.setCategoryId(product.getCategory().getId());
+        productDto.setCategoryTypeId(product.getCategoryType().getId());
+        productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
+        productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
+        return productDto;
     }
 
     @Override
     public Product updateProduct(ProductDto productDto, UUID id) {
-        return null;
+        Product product= productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEx("Product Not Found!"));
+        productDto.setId(product.getId());
+        return productRepository.save(productMapper.mapToProductEntity(productDto));
     }
 
     @Override
-    public Product fetchProductById(UUID uuid) throws Exception {
-        return null;
+    public Product fetchProductById(UUID id) throws Exception {
+        return productRepository.findById(id).orElseThrow(BadRequestException::new);
     }
 
-    private Product mapToProductEntity (ProductDto productDto){
-        Product product = new Product();
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setBrand(productDto.getBrand());
-        product.setNewArrival(productDto.isNewArrival());
-        product.setPrice(productDto.getPrice());
-        product.setRating(productDto.getRating());
-        Category category = categoryService.getCategory(productDto.getCategoryId());
-        if (null != category) {
-            product.setCategory(category);
-            UUID categoryTypeId = productDto.getCategoryTypeId();
-
-            CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
-            product.setCategoryType(categoryType);
-        }
-
-        if (null != productDto.getVariants()) {
-            product.setProductVariants(mapToProductVariant(productDto.getVariants(),product));
-        }
-
-        if (null != productDto.getProductResources()) {
-            product.setResources(mapToProductResources(productDto.getProductResources(),product));
-        }
-
-
-        return productRepository.save(product);
-    }
-
-    private List<Resources> mapToProductResources(List<ProductResourceDto> productResources, Product product) {
-
-        return  productResources.stream().map(productResourceDto -> {
-            Resources resources = new Resources();
-            resources.setName(productResourceDto.getName());
-            resources.setType(productResourceDto.getType());
-            resources.setUrl(productResourceDto.getUrl());
-            resources.setIsPrimary(productResourceDto.getIsPrimary());
-            resources.setProduct(product);
-            return resources;
-        }).collect(Collectors.toList());
-    }
-
-    private List<ProductVariant> mapToProductVariant(List<ProductVariantDto> productVariantDtos , Product product) {
-        return productVariantDtos.stream().map(productVariantDto -> {
-            ProductVariant productVariant = new ProductVariant();
-            productVariant.setColor(productVariantDto.getColor());
-            productVariant.setSize(productVariantDto.getSize());
-            productVariant.setStockQuantity(productVariantDto.getStockQuantity());
-            productVariant.setProduct(product);
-            return productVariant;
-        }).collect(Collectors.toList());
-    }
 
 }
