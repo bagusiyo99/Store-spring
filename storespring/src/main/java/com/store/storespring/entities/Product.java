@@ -77,4 +77,6 @@ public class Product {
     protected void onUpdate() {
         updatedAt = new java.util.Date();
     }
+
+
 }
