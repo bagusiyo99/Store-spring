@@ -8,17 +8,23 @@ import Footer from "./components/Footer/Footer";
 import { fetchCategories } from "./api/fetchCategories";
 import { useDispatch } from "react-redux";
 import { loadCategories } from "./store/features/category";
+import { setLoading } from "./store/features/common";
 
 const Shop = () => {
   const dispatch = useDispatch();
 
+  // 23.46
   useEffect(() => {
+    dispatch(setLoading(true));
     fetchCategories()
       .then((res) => {
         dispatch(loadCategories(res));
       })
-      .catch((err) => {}, []);
-  });
+      .catch((err) => {})
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  }, [dispatch]);
 
   return (
     <>
