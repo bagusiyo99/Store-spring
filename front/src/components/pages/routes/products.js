@@ -1,7 +1,13 @@
-import content from "../../../data/content.json";
-export const loadProductById = ({ params }) => {
-  const product = content?.products?.find(
-    (product) => product?.id?.toString() === params?.productId.toString()
-  );
-  return { product };
+// import content from "../../../data/content.json";
+import store from "../../../store/store";
+import { setLoading } from "../../../store/features/common";
+import { getProductBySlug } from "../../../api/fetchProducts";
+
+export const loadProductBySlug = async ({ params }) => {
+  try {
+    store.dispatch(setLoading(true));
+    const product = await getProductBySlug(params?.slug);
+    store.dispatch(setLoading(false));
+    return { product };
+  } catch (err) {}
 };

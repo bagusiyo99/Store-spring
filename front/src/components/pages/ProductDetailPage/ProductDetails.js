@@ -11,6 +11,9 @@ import SvgShipping from "./../../common/SvgShipping";
 import SvgReturn from "./../../common/SvgReturn";
 import SectionHeading from "../../Section/SectionsHeading/SectionHeading";
 import ProductCard from "./../ProductListPage/ProductCard";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { getAllProducts } from "../../../api/fetchProducts";
 
 const categories = content?.categories;
 
@@ -48,22 +51,34 @@ const ProductDetails = () => {
       ? product?.images[0]
       : product?.thumbnail
   );
+  const dispatch = useDispatch();
 
   const [breadCrumbLinks, setBreadCrumbLink] = useState([
     { title: "shop", path: "/" },
   ]);
 
-  const similarProducts = useMemo(() => {
-    return content?.products?.filter(
-      (item) => item?.type_id === product?.type_id && item?.id !== product?.id
-    );
-  }, [product]);
+  const cartItems = useSelector((state) => state.cartState?.cart);
+  const [similarProduct, setSimilarProducts] = useState([]);
+  const categories = useSelector((state) => state?.categoryState?.categories);
+
+  // const similarProducts = useMemo(() => {
+  //   return content?.products?.filter(
+  //     (item) => item?.type_id === product?.type_id && item?.id !== product?.id
+  //   );
+  // }, [product]);
+
+  useEffect(() => {
+    getAllProducts(product?.categoryId, product?.categoryTypeId)
+      .then((res) => {
+        const excludedProduct = res?.filter((item) => item?.id !== product?.id);
+        setSimilarProducts(excludedProduct);
+      })
+      .catch(() => []);
+  }, [product?.categoryId, product?.categoryTypeId, product?.id]);
 
   const productCategory = useMemo(() => {
-    return categories?.find(
-      (category) => category?.id === product?.category_id
-    );
-  }, [product]);
+    return categories?.find((category) => category?.id === product?.categoryId);
+  }, [product, categories]);
 
   useEffect(() => {
     setImage(product?.thumbnail);
@@ -75,10 +90,9 @@ const ProductDetails = () => {
         path: productCategory?.name,
       },
     ];
-    const productType = productCategory?.type_id?.find(
-      (item) => item?.type_id === product?.type_id
+    const productType = productCategory?.categoryTypes?.find(
+      (item) => item?.id === product?.categoryTypeId
     );
-
     if (productType) {
       arrayLinks?.push({
         title: productType?.name,
@@ -88,6 +102,16 @@ const ProductDetails = () => {
     setBreadCrumbLink(arrayLinks);
   }, [productCategory, product]);
 
+  const colors = useMemo(() => {
+    const colorSet = _.uniq(_.map(product?.variants, "color"));
+    return colorSet;
+  }, [product]);
+
+  const sizes = useMemo(() => {
+    const sizeSet = _.uniq(_.map(product?.variants, "size"));
+    return sizeSet;
+  }, [product]);
+
   return (
     <>
       <div className="flex flex-col md:flex-row px-10">
@@ -95,19 +119,19 @@ const ProductDetails = () => {
           <div className="flex flex-col md:flex-row">
             <div className="w-[100%] md:w-[20%] justify-center h-[40px] md:h-[420px]">
               <div className="flex flex-row md:flex-col justify-center h-full">
-                {product?.images[0]?.startsWith("http") &&
-                  product?.images?.map((item, index) => (
-                    <button
-                      onClick={() => setImage(item)}
-                      className="rounded-lg w-fit p-2 mb-2"
-                    >
-                      <img
-                        src={item}
-                        className="h-[60px] w-[60px] rounded-lg bg-cover bg-center hover:scale-105 hover:border"
-                        alt={"sample-" + index}
-                      />
-                    </button>
-                  ))}
+                {product?.productResources?.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setImage(item?.url)}
+                    className="rounded-lg w-fit p-2 mb-2"
+                  >
+                    <img
+                      src={item?.url}
+                      className="h-[60px] w-[60px] rounded-lg bg-cover bg-center hover:scale-105 hover:border"
+                      alt={"sample-" + index}
+                    />
+                  </button>
+                ))}
               </div>
               {/* Stack images */}
             </div>
@@ -143,12 +167,12 @@ const ProductDetails = () => {
             </div>
 
             <div className="mt-2">
-              <SizeFilter sizes={product?.size} hidleTitle />
+              <SizeFilter sizes={sizes} hidleTitle multi={false} />
             </div>
             <div>
               <p className="text-lg bold">Colors Available</p>
 
-              <ProductColors colors={product?.color} />
+              <ProductColors colors={colors} />
             </div>
             <div className="flex py-4">
               <button className="bg-black rounded-lg hover:bg-gray-700">
@@ -195,10 +219,10 @@ const ProductDetails = () => {
       <SectionHeading title={"Similar Products"} />
       <div className="flex px-10">
         <div className="pt-4 grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-8 px-2 pb-10">
-          {similarProducts?.map((item, index) => (
+          {similarProduct?.map((item, index) => (
             <ProductCard key={index} {...item} />
           ))}
-          {!similarProducts?.length && <p>No Products ditemukan!</p>}
+          {!similarProduct?.length && <p>No Products Found!</p>}
         </div>
       </div>
     </>
