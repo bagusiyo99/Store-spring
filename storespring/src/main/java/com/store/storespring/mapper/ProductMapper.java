@@ -103,9 +103,21 @@ public class ProductMapper {
                 .thumbnail(getProductThumbnail(product.getResources())).build();
     }
 
+//    private String getProductThumbnail(List<Resources> resources) {
+//        return resources.stream().filter(Resources::getIsPrimary).findFirst().orElse(null).getUrl();
+//    }
+
     private String getProductThumbnail(List<Resources> resources) {
-        return resources.stream().filter(Resources::getIsPrimary).findFirst().orElse(null).getUrl();
+        if (resources == null || resources.isEmpty()) {
+            return null; // Tidak ada thumbnail
+        }
+        return resources.stream()
+                .filter(Resources::getIsPrimary)
+                .findFirst()
+                .map(Resources::getUrl)
+                .orElse(null);
     }
+
 
     public List<ProductVariantDto> mapProductVariantListToDto(List<ProductVariant> productVariants) {
         return productVariants.stream().map(this::mapProductVariantDto).toList();
