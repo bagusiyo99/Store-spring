@@ -1,5 +1,5 @@
 import React from "react";
-import SvgFavourite from "./../../common/SvgFavourite";
+import SvgFavourite from "../../components/common/SvgFavourite";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({

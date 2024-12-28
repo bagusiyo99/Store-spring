@@ -7,7 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import { Provider } from "react-redux";
 import store from "./store/store";
-import ShopApplicationWrapper from "./components/pages/ShopApplicationWrapper";
+import ShopApplicationWrapper from "./pages/ShopApplicationWrapper";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

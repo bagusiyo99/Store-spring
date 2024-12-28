@@ -1,7 +1,6 @@
-// import content from "../../../data/content.json";
-import store from "../../../store/store";
-import { setLoading } from "../../../store/features/common";
-import { getProductBySlug } from "../../../api/fetchProducts";
+import { getProductBySlug } from "../api/fetchProducts";
+import { setLoading } from "../store/features/common";
+import store from "../store/store";
 
 export const loadProductBySlug = async ({ params }) => {
   try {

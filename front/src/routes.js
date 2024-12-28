@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Shop from "./Shop";
-import ProductListPage from "./components/pages/ProductListPage/ProductListPage";
-import ShopApplicationWrapper from "./components/pages/ShopApplicationWrapper";
-import ProductDetails from "./components/pages/ProductDetailPage/ProductDetails";
-import { loadProductBySlug } from "./components/pages/routes/products";
+import ProductListPage from "./pages/ProductListPage/ProductListPage";
+import ShopApplicationWrapper from "./pages/ShopApplicationWrapper";
+import ProductDetails from "./pages/ProductDetailPage/ProductDetails";
+import { loadProductBySlug } from "./routes/products";
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
         element: <ProductListPage categoryType={"MEN"} />,
       },
       {
-        path: "/product/:productId",
+        path: "/product/:slug",
         loader: loadProductBySlug,
         element: <ProductDetails />,
       },
