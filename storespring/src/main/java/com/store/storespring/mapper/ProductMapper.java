@@ -102,7 +102,7 @@ public class ProductMapper {
                 .slug(product.getSlug())
                 .thumbnail(getProductThumbnail(product.getResources())).build();
     }
-
+//
 //    private String getProductThumbnail(List<Resources> resources) {
 //        return resources.stream().filter(Resources::getIsPrimary).findFirst().orElse(null).getUrl();
 //    }
