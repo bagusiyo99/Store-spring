@@ -9,7 +9,7 @@ const AuthenticationWrapper = () => {
   const isLoading = useSelector((state) => state?.commonState?.loading);
   return (
     <div>
-      {/* <Navigation variant="auth" /> */}
+      <Navigation variant="auth" />
       <div className="flex">
         <div className="w-[60%] lg:w-[70%] hidden md:inline py-2">
           <img
