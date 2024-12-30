@@ -2,6 +2,7 @@ package com.store.storespring.auth.controller;
 
 
 
+import com.store.storespring.auth.config.JWTTokenHelper;
 import com.store.storespring.auth.dto.LoginRequest;
 
 import com.store.storespring.auth.dto.RegistrationRequest;
@@ -35,8 +36,8 @@ public class AuthController {
     @Autowired
     UserDetailsService userDetailsService;
 
-//    @Autowired
-//    JWTTokenHelper jwtTokenHelper;
+    @Autowired
+    JWTTokenHelper jwtTokenHelper;
 
 
     @PostMapping("/login")
@@ -53,8 +54,8 @@ public class AuthController {
                     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                 }
 
-//                String token =jwtTokenHelper.generateToken(user.getEmail());
-                String token =null;
+                String token =jwtTokenHelper.generateToken(user.getEmail());
+
                 UserToken userToken= UserToken.builder().token(token).build();
                 return new ResponseEntity<>(userToken,HttpStatus.OK);
             }
