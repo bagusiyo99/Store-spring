@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
-
 import Rating from "../../components/Rating/Rating";
 import SizeFilter from "../../components/Filters/SizeFilter";
 import ProductColors from "./ProductColors";
@@ -11,13 +8,14 @@ import SvgCreditCard from "../../components/common/SvgCreditCard";
 import SvgCloth from "../../components/common/SvgCloth";
 import SvgShipping from "../../components/common/SvgShipping";
 import SvgReturn from "../../components/common/SvgReturn";
-import SectionHeading from "../../components/Section/SectionsHeading/SectionHeading";
 import ProductCard from "../ProductListPage/ProductCard";
+import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { getAllProducts } from "../../api/fetchProducts";
-import { addItemToCartAction } from "./../../store/actions/cartAction";
+import { addItemToCartAction } from "../../store/actions/cartAction";
+import SectionHeading from "./../../components/Section/SectionsHeading/SectionHeading";
 
-// const categories = content?.categories;
+//const categories = content?.categories;
 
 const extraSections = [
   {
@@ -60,7 +58,7 @@ const ProductDetails = () => {
         setSimilarProducts(excludedProduct);
       })
       .catch(() => []);
-  }, [product?.categoryId, product?.categoryTypeId]);
+  }, [product?.categoryId, product?.categoryTypeId, product?.id]);
 
   useEffect(() => {
     setImage(product?.thumbnail);
@@ -85,6 +83,41 @@ const ProductDetails = () => {
     setBreadCrumbLink(arrayLinks);
   }, [productCategory, product]);
 
+  const addItemToCart = useCallback(() => {
+    //dispatch(addToCart({id:product?.id,quantity:1}));
+    //const selectedSize =
+    console.log("size ", selecteSize);
+    if (!selecteSize) {
+      setError("Please select size");
+    } else {
+      const selectedVariant = product?.variants?.filter(
+        (variant) => variant?.size === selecteSize
+      )?.[0];
+      console.log("selected ", selectedVariant);
+      if (selectedVariant?.stockQuantity > 0) {
+        dispatch(
+          addItemToCartAction({
+            productId: product?.id,
+            thumbnail: product?.thumbnail,
+            name: product?.name,
+            variant: selectedVariant,
+            quantity: 1,
+            subTotal: product?.price,
+            price: product?.price,
+          })
+        );
+      } else {
+        setError("Out of Stock");
+      }
+    }
+  }, [dispatch, product, selecteSize]);
+
+  useEffect(() => {
+    if (selecteSize) {
+      setError("");
+    }
+  }, [selecteSize]);
+
   const colors = useMemo(() => {
     const colorSet = _.uniq(_.map(product?.variants, "color"));
     return colorSet;
@@ -94,8 +127,6 @@ const ProductDetails = () => {
     const sizeSet = _.uniq(_.map(product?.variants, "size"));
     return sizeSet;
   }, [product]);
-
-  const addItemToCartAction = useCallback(() => {}, []);
 
   return (
     <>
@@ -151,7 +182,14 @@ const ProductDetails = () => {
             </div>
           </div>
           <div className="mt-2">
-            <SizeFilter sizes={sizes} hidleTitle />
+            <SizeFilter
+              onChange={(values) => {
+                setSelectedSize(values?.[0] ?? "");
+              }}
+              sizes={sizes}
+              hidleTitle
+              multi={false}
+            />
           </div>
           <div>
             <p className="text-lg bold">Colors Available</p>
@@ -159,7 +197,7 @@ const ProductDetails = () => {
           </div>
           <div className="flex py-4">
             <button
-              // onClick={addItemToCart}
+              onClick={addItemToCart}
               className="bg-black rounded-lg hover:bg-gray-700"
             >
               <div className="flex h-[42px] rounded-lg w-[150px] px-2 items-center justify-center bg-black text-white hover:bg-gray-700">
@@ -182,7 +220,7 @@ const ProductDetails = () => {
               </div>
             </button>
           </div>
-          {/* {error && <p className="text-lg text-red-600">{error}</p>} */}
+          {error && <p className="text-lg text-red-600">{error}</p>}
           <div className="grid md:grid-cols-2 gap-4 pt-4">
             {/*  */}
             {extraSections?.map((section, index) => (
