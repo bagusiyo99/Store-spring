@@ -7,6 +7,7 @@ import { loadProductBySlug } from "./routes/products";
 import AuthenticationWrapper from "./pages/AuthenticationWrapper";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Cart from "./pages/Cart/Cart";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
         path: "/product/:slug",
         loader: loadProductBySlug,
         element: <ProductDetails />,
+      },
+      {
+        path: "/cart-items",
+        element: <Cart />,
       },
       {
         path: "/v1/",
