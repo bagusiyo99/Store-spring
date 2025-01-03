@@ -1,5 +1,6 @@
 package com.store.storespring.auth.dto;
 
+import com.store.storespring.entities.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class UserDetailsDto {
     private String phoneNumber;
     private String email;
     private Object authorityList;
+    private List<Address> addressList;
 
 }

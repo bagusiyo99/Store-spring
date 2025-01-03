@@ -1,9 +1,10 @@
 package com.store.storespring.services;
 
-import com.thecodereveal.shopease.auth.entities.User;
-import com.thecodereveal.shopease.dto.AddressRequest;
-import com.thecodereveal.shopease.entities.Address;
-import com.thecodereveal.shopease.repositories.AddressRepository;
+
+import com.store.storespring.auth.entities.User;
+import com.store.storespring.dto.AddressRequest;
+import com.store.storespring.entities.Address;
+import com.store.storespring.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
