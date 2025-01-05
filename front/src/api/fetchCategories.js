@@ -11,5 +11,6 @@ export const fetchCategories = async () => {
     return result?.data;
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
